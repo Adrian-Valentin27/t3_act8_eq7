@@ -1,0 +1,171 @@
+/* Reseteo básico para quitar márgenes blancos de la página */
+:global(body) {
+    margin: 0;
+    background-color: #121212;
+    color: #ffffff;
+    font-family: sans-serif;
+}
+
+.login-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Cabecera */
+.login-header {
+    background-color: #1a1a1a;
+    padding: 20px 50px;
+    border-bottom: 2px solid #2a2a2a;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+    .logo-container h1 {
+        margin: 0;
+        font-size: 2rem;
+        line-height: 1.1;
+    }
+
+.placeholder-logo, .small-logo {
+    font-size: 2.5rem;
+}
+
+/* Principal */
+.login-main {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.login-box {
+    text-align: center;
+    max-width: 450px;
+    width: 100%;
+}
+
+    .login-box h2 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+    }
+
+    .login-box p {
+        font-size: 0.9rem;
+        color: #b3b3b3;
+        margin-bottom: 30px;
+    }
+
+/* Formulario y Botones */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+    .login-form input {
+        padding: 12px 15px;
+        border-radius: 8px;
+        border: 1px solid #444;
+        background-color: #ffffff;
+        color: #000000;
+        font-size: 1rem;
+    }
+
+.button-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+    .button-group button {
+        flex: 1;
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        border: none;
+    }
+
+.btn-primary {
+    background-color: #1a1a1a;
+    color: white;
+    border: 1px solid #444 !important;
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: white;
+    border: 1px solid #444 !important;
+}
+
+    .btn-primary:hover, .btn-secondary:hover {
+        background-color: #333;
+    }
+
+    .btn-primary:disabled, .btn-secondary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+.error-message {
+    color: #ff4d4d;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Footer */
+.login-footer {
+    background-color: #1a1a1a;
+    padding: 30px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    color: #b3b3b3;
+    border-top: 2px solid #2a2a2a;
+}
+
+.footer-register {
+    text-align: center;
+}
+
+.btn-outline {
+    background-color: transparent;
+    color: white;
+    border: 1px solid white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px 0;
+}
+
+/* Estilos de Iconos de Redes Sociales (react-icons) */
+.social-icons {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.icon-circle {
+    background-color: #0a0a0a;
+    color: #ffffff;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .icon-circle:hover {
+        background-color: #333333;
+    }

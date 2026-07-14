@@ -1,0 +1,261 @@
+/* Layout Principal */
+.dashboard-layout {
+    display: flex;
+    min-height: 100vh;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    font-family: sans-serif;
+}
+
+/* Sidebar Izquierdo con Animación de Ancho y Centrado */
+.sidebar {
+    width: 60px;
+    background-color: #121212;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra los iconos horizontalmente por defecto */
+    padding: 20px 0;
+    border-right: 1px solid #2a2a2a;
+    gap: 30px;
+    transition: width 0.3s ease-in-out;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+    .sidebar.expanded {
+        width: 180px;
+        align-items: flex-start; /* Mantiene estructura para leer el texto enlazado */
+    }
+
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    width: 100%;
+    height: 40px; /* Altura fija para mantener control de posición */
+}
+
+/* Forzamos el centrado perfecto del icono en el carril de 60px */
+.sidebar-icon {
+    font-size: 1.4rem;
+    color: #888;
+    width: 60px; /* Ancho exacto del sidebar contraído para un centrado impecable */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: color 0.3s;
+    flex-shrink: 0;
+}
+
+.sidebar-item:hover .sidebar-icon,
+.sidebar-item:hover .sidebar-text {
+    color: #fff;
+}
+
+.sidebar-text {
+    font-size: 0.9rem;
+    color: #888;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    margin-left: 2px;
+}
+
+.sidebar.expanded .sidebar-text {
+    opacity: 1;
+}
+
+.sidebar-item.bottom {
+    margin-top: auto;
+}
+
+/* Contenido Principal */
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Barra Superior */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background-color: #121212;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.topbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .topbar-logo h2 {
+        margin: 0;
+        font-size: 1.2rem;
+        line-height: 1.1;
+    }
+
+.logo-icon {
+    font-size: 2rem;
+}
+
+.topbar-nav {
+    display: flex;
+    gap: 10px;
+    background-color: #fff;
+    padding: 5px;
+    border-radius: 20px;
+}
+
+.nav-btn {
+    background: none;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+}
+
+    .nav-btn.active {
+        background-color: #e0e0e0;
+    }
+
+.topbar-user {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #444;
+}
+
+.logout-btn {
+    background: none;
+    border: none;
+    color: #ff4d4d;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* Cuerpo del Dashboard (Tabla) */
+.dashboard-body {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.page-title {
+    font-size: 2rem;
+    margin-bottom: 30px;
+}
+
+.controls-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 600px;
+    justify-content: center;
+}
+
+.search-box input {
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 1px solid #444;
+    background-color: transparent;
+    color: white;
+    width: 300px;
+}
+
+.btn-filter {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+    .btn-filter:hover {
+        background-color: #0056b3;
+    }
+
+/* Estilos de la Tabla */
+.table-container {
+    width: 100%;
+    max-width: 600px;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+    .data-table th {
+        color: #888;
+        padding: 15px;
+        border-bottom: 1px solid #333;
+    }
+
+    .data-table td {
+        padding: 15px;
+        border-bottom: 1px solid #2a2a2a;
+    }
+
+.status-badge {
+    padding: 5px 15px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+    .status-badge.online {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .status-badge.offline {
+        background-color: #6c757d;
+        color: white;
+    }
+
+/* Paginación */
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 600px;
+    margin-top: 20px;
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.page-dots {
+    display: flex;
+    gap: 10px;
+}
+
+.dot {
+    background-color: #333;
+    color: white;
+    border: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    .dot.active {
+        background-color: #007bff;
+    }

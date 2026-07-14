@@ -1,0 +1,100 @@
+/* dsx-modal.css de nuestros trabajos anteriores adaptado lo más posible a este*/
+:root {
+  --dsx-bg-panel: #1e1e2d;
+  --dsx-border: #333333;
+  --dsx-text: #ffffff;
+  --dsx-text-muted: #bbbbbb;
+  --dsx-primary: #6c5ce7;
+  --dsx-primary-hover: #5b4bc4;
+  --dsx-success: #00b894;
+  --dsx-success-bg: rgba(0, 184, 148, 0.15);
+  --dsx-success-text: #00b894;
+  --dsx-error: #ff7675;
+  --dsx-error-bg: rgba(255, 118, 117, 0.15);
+  --dsx-error-text: #ff7675;
+  --dsx-warning: #fdcb6e;
+  --dsx-warning-bg: rgba(253, 203, 110, 0.15);
+  --dsx-warning-text: #fdcb6e;
+  --dsx-info: #74b9ff;
+  --dsx-info-bg: rgba(116, 185, 255, 0.15);
+  --dsx-info-text: #74b9ff;
+  --dsx-font: system-ui, -apple-system, sans-serif;
+}
+
+.dsx-modal-fondo {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 9999;
+  font-family: var(--dsx-font);
+  padding: 20px;
+}
+
+.dsx-modal-fondo.dsx-activo {
+  opacity: 1;
+  pointer-events: auto;
+  backdrop-filter: blur(4px);
+}
+
+.dsx-modal-caja {
+  background: var(--dsx-bg-panel);
+  border: 1px solid var(--dsx-border);
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+  position: relative;
+  transform: translateY(12px) scale(0.97);
+  transition: transform 0.25s ease;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.dsx-modal-fondo.dsx-activo .dsx-modal-caja {
+  transform: translateY(0) scale(1);
+}
+
+.dsx-modal-cerrar {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--dsx-text-muted);
+}
+
+.dsx-modal-cerrar:hover { color: var(--dsx-text); }
+.dsx-modal-icono { font-size: 48px; margin-bottom: 16px; }
+.dsx-modal-etiqueta { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--dsx-text-muted); margin-bottom: 8px; }
+.dsx-modal-titulo { font-size: 20px; font-weight: 600; margin-bottom: 8px; color: var(--dsx-text); }
+.dsx-modal-mensaje { font-size: 14px; color: var(--dsx-text-muted); margin-bottom: 20px; line-height: 1.5; }
+
+.dsx-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.dsx-badge.dsx-exito { background: var(--dsx-success-bg); color: var(--dsx-success-text); border: 1px solid var(--dsx-success); }
+.dsx-badge.dsx-error { background: var(--dsx-error-bg); color: var(--dsx-error-text); border: 1px solid var(--dsx-error); }
+.dsx-badge.dsx-advertencia { background: var(--dsx-warning-bg); color: var(--dsx-warning-text); border: 1px solid var(--dsx-warning); }
+
+.dsx-modal-botones { display: flex; gap: 10px; margin-top: 4px; }
+.dsx-boton { flex: 1; padding: 12px; border: none; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+.dsx-boton-primario { background: linear-gradient(135deg, var(--dsx-primary), #a29bfe); color: #fff; }
+.dsx-boton-primario:hover { transform: scale(1.03); }
+.dsx-boton-secundario { background: transparent; color: var(--dsx-text); border: 1px solid var(--dsx-border); }
+.dsx-boton-secundario:hover { background: #2a2a3c; }
+.dsx-boton-error { background: #ff7675; color: #fff; }
+.dsx-boton-error:hover { background: #d63031; transform: scale(1.03); }
