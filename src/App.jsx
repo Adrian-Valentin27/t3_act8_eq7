@@ -5,12 +5,11 @@ import ProtectedRoute from './components/ProtectedRoute'; // Importamos al guard
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/t3_act8_eq07">
       <Routes>
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
         
-        {/* Aquí protegemos la ruta del dashboard envolviéndola con ProtectedRoute */}
         <Route 
           path="/dashboard" 
           element={
