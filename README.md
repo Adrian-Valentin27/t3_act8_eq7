@@ -1,4 +1,4 @@
-# #  Dashboard de Gestión de Jugadores
+# #  Dashboard de Gestión Posibles Premios para jugadores
 ---
 
 ## Integrantes del Equipo
@@ -32,7 +32,7 @@ Para el login, separamos la lógica de conexión a la API en un archivo independ
 2. Prevenimos que el formulario recargue la página con `e.preventDefault()`.
 3. Enviamos los datos a la API. Si las credenciales son correctas, guardamos la información en el navegador (`localStorage`) y redirigimos al Dashboard usando `useNavigate()`.
 ---
-1. Conexión con la API de Inventario
+## Conexión con la API de Inventario
 Para que la aplicación funcione de verdad, conectamos el sistema con la API de Productos.
 
 Adiós a los datos falsos: En lugar de inventar videojuegos o consolas en el código, ahora la aplicación hace una petición a la API al cargar la página.
@@ -60,3 +60,8 @@ Montar el Servidor Web (Nginx): Instalamos un programa llamado Nginx en el servi
 El truco de las rutas: Configuramos el servidor para que entienda las rutas internas de la aplicación. De esta forma, si alguien recarga la página directamente en la sección del Dashboard, el servidor sabe exactamente qué hacer y no arroja una pantalla de error.
 
 Permisos de seguridad: Ajustamos los accesos del servidor para asegurarnos de que las imágenes, logos y estilos se lean al instante y sin restricciones extrañas.
+
+
+---
+LINK DE LA IP: http://198.199.120.58/t3_act8_eq07
+---
