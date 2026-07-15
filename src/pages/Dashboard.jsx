@@ -22,9 +22,7 @@ function Dashboard() {
   // MANEJO DE URL 
   const [searchParams, setSearchParams] = useSearchParams();
   
-  // Leemos la URL: si dice ?page=2, tomamos el 2. Si no dice nada, por defecto es página 1
   const currentPage = Number(searchParams.get('page')) || 1;
-  // Leemos el límite
   const limit = Number(searchParams.get('limit')) || 10;
 
   // 2. ESTADOS DE LA APLICACIÓN
@@ -32,20 +30,19 @@ function Dashboard() {
   const [categorias, setCategorias] = useState([]);
   const [totalRecords, setTotalRecords] = useState(0);
   
-  //Estados de carga y error
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-const [dsxConfig, setDsxConfig] = useState({ isOpen: false });
-const closeDsxModal = () => setDsxConfig({ ...dsxConfig, isOpen: false });
+  const [dsxConfig, setDsxConfig] = useState({ isOpen: false });
+  const closeDsxModal = () => setDsxConfig({ ...dsxConfig, isOpen: false });
 
   // Filtros
   const [searchTerm, setSearchTerm] = useState('');
-const [selectedCategory, setSelectedCategory] = useState('smartphones');
+  const [selectedCategory, setSelectedCategory] = useState('smartphones');
 
   // Estados para el menú lateral y el Modal CRUD
   const [isExpanded, setIsExpanded] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingProduct, setEditingProduct] = useState(null); // Si es null, estamos creando; si tiene datos, estamos editando
+  const [editingProduct, setEditingProduct] = useState(null); 
 
   // 3. CARGAR CATEGORÍAS
   useEffect(() => {
@@ -66,15 +63,12 @@ const [selectedCategory, setSelectedCategory] = useState('smartphones');
       setIsLoading(true);
       setError(null);
       try {
-        // skip = (página actual - 1) * límite
         const skip = (currentPage - 1) * limit;
         let data;
 
         if (selectedCategory) {
-          // Si el usuario eligió una categoría en el select, traemos por categoría
           data = await getProductsByCategoryAPI(selectedCategory, limit, skip);
         } else {
-          // Si no, traemos normales o por búsqueda de texto
           data = await getProductsAPI(limit, skip, searchTerm);
         }
 
@@ -88,27 +82,23 @@ const [selectedCategory, setSelectedCategory] = useState('smartphones');
     };
 
     fetchProducts();
-  }, [currentPage, limit, selectedCategory]); // Se dispara automáticamente si cambias de página o filtro
+  }, [currentPage, limit, selectedCategory]); 
 
   // 5. FUNCIONES PARA CAMBIAR PARÁMETROS DE LA URL
   const handlePageChange = (newPage) => {
-    // Actualizamos la URL preservando el límite actual
     setSearchParams({ page: newPage, limit: limit });
   };
 
   const handleLimitChange = (e) => {
     const newLimit = Number(e.target.value);
-    // Si cambiamos cuántos ver por página, regresamos a la página 1 en la URL para no quedar en una página vacía
     setSearchParams({ page: 1, limit: newLimit });
   };
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    // Al buscar por texto, reiniciamos la categoría y regresamos a la página 1
     setSelectedCategory('');
     setSearchParams({ page: 1, limit: limit });
     
-    // Forzamos la recarga llamando a la API con el texto del input
     setIsLoading(true);
     getProductsAPI(limit, 0, searchTerm)
       .then(data => {
@@ -125,28 +115,21 @@ const [selectedCategory, setSelectedCategory] = useState('smartphones');
   const handleCategoryChange = (e) => {
     const category = e.target.value;
     setSelectedCategory(category);
-    setSearchTerm(''); // Limpiamos el buscador de texto
+    setSearchTerm(''); 
     setSearchParams({ page: 1, limit: limit });
   };
 
-  // Simulación en API + Actualización Visual en React
-  
-  // Abrir modal para CREAR
   const handleOpenCreate = () => {
-    setEditingProduct(null); // Limpiamos para indicar creación
+    setEditingProduct(null); 
     setIsModalOpen(true);
   };
 
-  // Abrir modal para EDITAR
   const handleOpenEdit = (producto) => {
-    setEditingProduct(producto); // Pasamos los datos del producto a editar
+    setEditingProduct(producto); 
     setIsModalOpen(true);
   };
 
-  // Le agregamos el parámetro "isConfirmed" que por defecto es false
   const handleSaveModal = async (productData, isConfirmed = false) => {
-    
-    // INTERCEPTOR: Si hay un cero y el usuario no ha confirmado, lanzamos la alerta
     if ((productData.stock === 0 || productData.price === 0) && !isConfirmed) {
       setDsxConfig({
         isOpen: true, 
@@ -162,22 +145,21 @@ const [selectedCategory, setSelectedCategory] = useState('smartphones');
             texto: 'Sí, guardar en 0', 
             tipo: 'primario', 
             onClick: (cerrar) => {
-              cerrar(); // Cerramos la advertencia
-              handleSaveModal(productData, true); // Volvemos a disparar el guardado, pero ahora saltando la alerta
+              cerrar(); 
+              handleSaveModal(productData, true); 
             }
           }
         ]
       });
-      return; // Detenemos la ejecución aquí para que no guarde nada en la API todavía
+      return; 
     }
 
-    // Si ya confirmó o si no había ceros, el flujo sigue normal hacia la API:
     try {
       if (editingProduct) {
         const updatedFromAPI = await updateProductAPI(editingProduct.id, productData);
         setProductos(productos.map(prod => 
-  prod.id === editingProduct.id ? { ...prod, ...updatedFromAPI, ...productData } : prod
-));
+          prod.id === editingProduct.id ? { ...prod, ...updatedFromAPI, ...productData } : prod
+        ));
         
         setDsxConfig({
           isOpen: true, tipo: 'exito', icono: '✓', etiqueta: 'Resultado',
@@ -197,7 +179,7 @@ const [selectedCategory, setSelectedCategory] = useState('smartphones');
           botones: [{ texto: 'Genial', tipo: 'primario', onClick: (cerrar) => cerrar() }]
         });
       }
-      setIsModalOpen(false); // Por fin cerramos el formulario de edición
+      setIsModalOpen(false); 
     } catch (err) {
       setDsxConfig({
         isOpen: true, tipo: 'error', icono: '✕', etiqueta: 'Error',
@@ -207,9 +189,8 @@ const [selectedCategory, setSelectedCategory] = useState('smartphones');
       });
     }
   };
-  // ELIMINAR con confirmación previa
+
   const handleDelete = (id, title) => {
-    // Levantamos el modal de ADVERTENCIA
     setDsxConfig({
       isOpen: true, tipo: 'advertencia', icono: '⚠️', etiqueta: 'Peligro',
       titulo: '¿Eliminar producto?',
@@ -218,8 +199,7 @@ const [selectedCategory, setSelectedCategory] = useState('smartphones');
       botones: [
         { texto: 'Cancelar', tipo: 'secundario', onClick: (cerrar) => cerrar() },
         { texto: 'Sí, Eliminar', tipo: 'error', onClick: async (cerrar) => {
-            cerrar(); // Cerramos el modal primero
-            // Aquí va la lógica real de borrado
+            cerrar(); 
             try {
               await deleteProductAPI(id);
               setProductos(prev => prev.filter(prod => prod.id !== id));
@@ -233,7 +213,6 @@ const [selectedCategory, setSelectedCategory] = useState('smartphones');
     });
   };
 
-  // 7. FUNCIONES DE NAVEGACIÓN Y MENU
   const handleLogout = () => {
     localStorage.removeItem('user');
     navigate('/login');
@@ -271,55 +250,63 @@ const [selectedCategory, setSelectedCategory] = useState('smartphones');
 
       {/* Contenido Principal */}
       <div className="main-content">
-        <header className="topbar">
-          <div className="topbar-logo" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-  <img 
-    src="/logo.png" 
-    alt="Connect & Play Logo" 
-    style={{ 
-      height: '55px', 
-      objectFit: 'contain',
-      transform: 'scale(1.7)', 
-      transformOrigin: 'left center',
-      marginRight: '10px'
-    }} 
-  />
-  <h2 style={{ margin: 0, fontSize: '1.3rem', lineHeight: '1.1', textAlign: 'left' }}>
-    Connect<br/>& Play.
-  </h2>
-</div>
+        
+        {/* 🚀 HEADER CORREGIDO: Flex wrap para adaptarse a pantallas móviles sin encimarse */}
+        <header className="topbar" style={{ 
+          display: 'flex', 
+          flexWrap: 'wrap', 
+          justifyContent: 'space-between', 
+          alignItems: 'center', 
+          gap: '15px',
+          padding: '10px 15px'
+        }}>
+          <div className="topbar-logo" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <img 
+              src={Logo || "/logo.png"} 
+              alt="Connect & Play Logo" 
+              style={{ 
+                height: '45px', 
+                objectFit: 'contain'
+              }} 
+            />
+            <h2 style={{ margin: 0, fontSize: '1.2rem', lineHeight: '1.1', textAlign: 'left', whiteSpace: 'nowrap' }}>
+              Connect<br/>& Play.
+            </h2>
+          </div>
           
-          <nav className="topbar-nav">
-            <button className="nav-btn active">INVENTARIO</button>
-            <button className="nav-btn" onClick={() => alert('Info en desarrollo')}>INFORMACIÓN</button>
+          <nav className="topbar-nav" style={{ display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
+            <button className="nav-btn active" style={{ padding: '6px 12px', fontSize: '0.85rem' }}>INVENTARIO</button>
+            <button className="nav-btn" onClick={() => alert('Info en desarrollo')} style={{ padding: '6px 12px', fontSize: '0.85rem' }}>INFORMACIÓN</button>
           </nav>
 
-          <div className="topbar-user">
-            <span style={{ fontWeight: 'bold', marginRight: '10px' }}>
+          <div className="topbar-user" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginLeft: 'auto' }}>
+            <span style={{ fontWeight: 'bold', fontSize: '0.9rem', whiteSpace: 'nowrap' }}>
               Hola, {user?.firstName || user?.username || 'Admin'}
             </span>
-            <img src={user?.image || 'https://via.placeholder.com/40'} alt="Avatar" className="avatar" />
-            <button onClick={handleLogout} className="logout-btn" title="Cerrar sesión">
+            <img src={user?.image || 'https://via.placeholder.com/40'} alt="Avatar" className="avatar" style={{ width: '35px', height: '35px', borderRadius: '50%' }} />
+            <button onClick={handleLogout} className="logout-btn" title="Cerrar sesión" style={{ background: 'transparent', border: 'none', color: '#ff7675', cursor: 'pointer', fontSize: '1.2rem', display: 'flex' }}>
               <FaSignOutAlt />
             </button>
           </div>
         </header>
 
-        <section className="dashboard-body">
-          <h1 className="page-title" style={{ marginBottom: '25px' }}>
+        <section className="dashboard-body" style={{ padding: '15px' }}>
+          <h1 className="page-title" style={{ marginBottom: '20px', fontSize: '1.5rem' }}>
             Hardware & Recompensas Gamer.
           </h1>
 
+          {/* 🚀 CONTROLES CORREGIDOS: Se acomodan en bloque o en línea según el espacio */}
           <div className="controls-container" style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', alignItems: 'center', marginBottom: '20px' }}>
             
             {/* 1. Filtro por Texto */}
-            <form onSubmit={handleSearchSubmit} className="search-box" style={{ display: 'flex', gap: '5px' }}>
+            <form onSubmit={handleSearchSubmit} className="search-box" style={{ display: 'flex', gap: '5px', flex: '1 1 250px' }}>
               <input 
                 type="text" 
                 placeholder="Buscar por nombre..." 
                 ref={searchInputRef}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                style={{ flex: 1, padding: '8px 12px', borderRadius: '6px', background: '#2a2a3c', color: 'white', border: '1px solid #444', outline: 'none' }}
               />
               <button type="submit" style={{ padding: '8px 15px', borderRadius: '6px', background: '#6c5ce7', color: '#fff', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>
                 Buscar
@@ -327,12 +314,12 @@ const [selectedCategory, setSelectedCategory] = useState('smartphones');
             </form>
 
             {/* 2. Filtro por Categoría */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#ccc' }}>
-              <label>Categoría:</label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#ccc', flexWrap: 'nowrap' }}>
+              <label style={{ whiteSpace: 'nowrap' }}>Categoría:</label>
               <select 
                 value={selectedCategory} 
                 onChange={handleCategoryChange}
-                style={{ padding: '8px 12px', borderRadius: '6px', background: '#2a2a3c', color: 'white', border: '1px solid #444', outline: 'none' }}
+                style={{ padding: '8px 12px', borderRadius: '6px', background: '#2a2a3c', color: 'white', border: '1px solid #444', outline: 'none', maxWidth: '160px' }}
               >
                 <option value="">-- Todas --</option>
                 {categorias.map((cat, idx) => {
@@ -344,8 +331,8 @@ const [selectedCategory, setSelectedCategory] = useState('smartphones');
             </div>
 
             {/* 3. Selector de Registros por Página */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#ccc' }}>
-              <label>Mostrar:</label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#ccc', flexWrap: 'nowrap' }}>
+              <label style={{ whiteSpace: 'nowrap' }}>Mostrar:</label>
               <select 
                 value={limit} 
                 onChange={handleLimitChange}
@@ -375,7 +362,8 @@ const [selectedCategory, setSelectedCategory] = useState('smartphones');
                 fontSize: '0.95rem',
                 marginLeft: 'auto',
                 boxShadow: '0 4px 10px rgba(108, 92, 231, 0.3)',
-                transition: 'transform 0.2s'
+                transition: 'transform 0.2s',
+                whiteSpace: 'nowrap'
               }}
               onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.03)'}
               onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
@@ -398,43 +386,41 @@ const [selectedCategory, setSelectedCategory] = useState('smartphones');
             </div>
           )}
 
-          {/* TABLA DE PRODUCTOS */}
+          {/* 🚀 TABLA CORREGIDA: Envuelta en un contenedor con overflow-x: auto para el scroll horizontal en teléfonos */}
           {!isLoading && !error && (
-            <div className="table-container" style={{ marginTop: '20px' }}>
-              <table className="data-table">
+            <div className="table-container" style={{ marginTop: '20px', width: '100%', overflowX: 'auto', borderRadius: '8px', border: '1px solid #333' }}>
+              <table className="data-table" style={{ width: '100%', minWidth: '650px', borderCollapse: 'collapse' }}>
                 <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Producto</th>
-                    <th>Categoría</th>
-                    <th>Precio</th>
-                    <th>Stock</th>
-                    <th style={{ textAlign: 'center' }}>Acciones</th>
+                  <tr style={{ background: '#1e1e2d', textAlign: 'left' }}>
+                    <th style={{ padding: '12px' }}>ID</th>
+                    <th style={{ padding: '12px' }}>Producto</th>
+                    <th style={{ padding: '12px' }}>Categoría</th>
+                    <th style={{ padding: '12px' }}>Precio</th>
+                    <th style={{ padding: '12px' }}>Stock</th>
+                    <th style={{ textAlign: 'center', padding: '12px' }}>Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
                   {productos.length > 0 ? (
                     productos.map((prod) => (
-                      <tr key={prod.id}>
-                        <td>#{prod.id}</td>
-                        <td style={{ fontWeight: 'bold' }}>{prod.title}</td>
-                        <td>
+                      <tr key={prod.id} style={{ borderBottom: '1px solid #2a2a3c' }}>
+                        <td style={{ padding: '12px' }}>#{prod.id}</td>
+                        <td style={{ fontWeight: 'bold', padding: '12px' }}>{prod.title}</td>
+                        <td style={{ padding: '12px' }}>
                           <span style={{ background: '#2d3436', padding: '4px 8px', borderRadius: '4px', fontSize: '0.85rem', textTransform: 'capitalize' }}>
                             {prod.category}
                           </span>
                         </td>
-                        <td style={{ color: '#00b894', fontWeight: 'bold' }}>${prod.price}</td>
+                        <td style={{ color: '#00b894', fontWeight: 'bold', padding: '12px' }}>${prod.price}</td>
                         
-                          
-                          
-                        <td style={{ textAlign: 'center' }}>
+                        <td style={{ padding: '12px' }}>
                           <span style={{ 
                             display: 'inline-block',
                             padding: '4px 10px',
                             borderRadius: '20px',
                             fontSize: '0.85rem',
                             fontWeight: 'bold',
-                            whiteSpace: 'nowrap', // Evita que el texto se rompa en varias líneas
+                            whiteSpace: 'nowrap', 
                             background: prod.stock > 20 ? 'rgba(0, 184, 148, 0.2)' : 'rgba(255, 118, 117, 0.2)',
                             color: prod.stock > 20 ? '#00b894' : '#ff7675',
                             border: `1px solid ${prod.stock > 20 ? '#00b894' : '#ff7675'}`
@@ -443,7 +429,7 @@ const [selectedCategory, setSelectedCategory] = useState('smartphones');
                           </span>
                         </td>
                         
-                        <td style={{ textAlign: 'center' }}>
+                        <td style={{ textAlign: 'center', padding: '12px', whiteSpace: 'nowrap' }}>
                           <button 
                             onClick={() => handleOpenEdit(prod)} 
                             title="Editar"
@@ -475,8 +461,8 @@ const [selectedCategory, setSelectedCategory] = useState('smartphones');
 
           {/* CONTROLES DE PAGINACIÓN */}
           {!isLoading && totalPages > 1 && (
-            <div className="pagination" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px' }}>
-              <span>Mostrando página <strong>{currentPage}</strong> de <strong>{totalPages}</strong> (Total: {totalRecords} ítems)</span>
+            <div className="pagination" style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px' }}>
+              <span style={{ fontSize: '0.9rem', color: '#ccc' }}>Mostrando página <strong>{currentPage}</strong> de <strong>{totalPages}</strong> (Total: {totalRecords} ítems)</span>
               
               <div style={{ display: 'flex', gap: '8px' }}>
                 <button 
